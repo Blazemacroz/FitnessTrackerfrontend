@@ -27,8 +27,31 @@ function App() {
   const [token, setToken] = useState("");
 
   useEffect(() => {
-    const routinePromise = fetchRoutines();
-    Promise.all([routinePromise]).then((res) => setAllRoutines(res[0]));
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+      const userPromise = fetchUser(storedToken);
+      const routinePromise = fetchRoutines();
+      const activitiesPromise = fetchActivities();
+      Promise.all([userPromise, routinePromise, activitiesPromise]).then(
+        async (res) => {
+          setCurrentUser(res[0]);
+          setAllRoutines(res[1]);
+          setAllActivities(res[2]);
+          const userRoutines = await fetchUserRoutines(
+            storedToken,
+            setMyRoutines(userRoutines)
+          );
+        }
+      );
+    } else {
+      const routinesPromise = fetchRoutines();
+      const activitiesPromis = fetchActivities();
+      Promise.all([routinesPromise, activitiesPromise]).then((res) => {
+        setAllRoutines(res[0]);
+        setAllActivities(res[1]);
+      });
+    }
   }, [token]);
 
   return (
@@ -51,20 +74,28 @@ function App() {
                 <LinkContainer to="/Routines">
                   <Nav.Link>Routines</Nav.Link>
                 </LinkContainer>
-                <LinkContainer to="/My_Routines">
-                  <Nav.Link>My Routines</Nav.Link>
-                </LinkContainer>
+                {token ? (
+                  <LinkContainer to="/My_Routines">
+                    <Nav.Link>My Routines</Nav.Link>
+                  </LinkContainer>
+                ) : null}
                 <LinkContainer to="/Activities">
                   <Nav.Link>Activities</Nav.Link>
                 </LinkContainer>
-                <LinkContainer to="/Login_Logout">
-                  <Nav.Link>Login/Logout</Nav.Link>
-                </LinkContainer>
+                {token ? (
+                  <LinkContainer to="/LoginLogout">
+                    <Nav.Link>Login</Nav.Link>
+                  </LinkContainer>
+                ) : (
+                  <LinkContainer to="/LoginLogout">
+                    <Nav.Link>Logout</Nav.Link>
+                  </LinkContainer>
+                )}
               </Nav>
             </Navbar.Collapse>
           </Container>
         </Navbar>
-        <div id="main-section">
+        <div id="primary-section">
           <Route exact path="/">
             <Home />
           </Route>
@@ -72,7 +103,7 @@ function App() {
             <Home />
           </Route>
           <Route path="/Routines">
-            <Routines allRoutines={allRoutines} />
+            <Routines allRoutines={allRoutines} token={token} />
           </Route>
           <Route path="/My_Routines">
             <MyRoutines />
@@ -80,8 +111,12 @@ function App() {
           <Route path="/Activities">
             <Activities />
           </Route>
-          <Route path="/Login_Logout">
-            <Login_Logout />
+          <Route path="/LoginLogout">
+            <LoginLogout
+              token={token}
+              setToken={setToken}
+              currentUser={currentUser}
+            />
           </Route>
         </div>
       </div>
