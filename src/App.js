@@ -12,9 +12,18 @@ import LoginLogout from "./Components/LoginLogout.jsx";
 import { fetchRoutines } from "./api/ajax-helpers.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Navbar } from "react-bootstrap";
+import {
+  fetchRoutines,
+  fetchActivities,
+  fetchUser,
+  fetchUserRoutines,
+} from "./api/ajax-helpers.js";
 
 function App() {
-  const [allRoutines, setAllRoutines] = useState(false);
+  const [currentUser, setCurrentUser] = useState([]);
+  const [myRoutines, setMyRoutines] = useState([]);
+  const [allRoutines, setAllRoutines] = useState([]);
+  const [allActivities, setAllActivities] = useState([]);
   const [token, setToken] = useState("");
 
   useEffect(() => {
