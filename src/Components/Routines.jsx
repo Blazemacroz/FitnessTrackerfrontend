@@ -1,19 +1,31 @@
 import React from "react";
+import RoutineCard from "./RoutineCard";
+import CreateRoutine from "./CreateRoutine";
 
-const Routines = ({ allRoutines }) => {
+const Routines = ({ MyRoutines, setMyRoutine, allRoutines, setAllRoutines, currentUser, token }) => {
   return (
-    <div>
+    <div id="routine">
         <h1>Routines</h1>
-        {
-          allRoutines.map ((routine) => {
+      {token ? 
+        <CreateRoutine MyRoutines={MyRoutines}
+    setMyRoutine={setMyRoutine}
+    allRoutines={allRoutines}
+    setAllRoutines={setAllRoutines}
+    currentUser={currentUser}
+    token={token} />
+  : null}
+  <div className="routine-activities">
+          {
+          allRoutines.map ((routine,index) => {
             return (
-              <div key={routine.id}>
-                  <h2>{routine.name}</h2>
-                  <h3>{routine.creatorName}</h3>
-
-                  <p>{routine.goal}</p>
-
-                </div>
+              <RoutineCard key={Routine.id}
+              routine={Routines}
+              MyRoutines={MyRoutines}
+              setMyRoutines={setMyRoutines}
+              allRoutines={allRoutines}
+              setAllRoutines={setAllRoutines}
+              currentUser={currentUser}
+              token={token} />
 
             )
           }
@@ -21,6 +33,8 @@ const Routines = ({ allRoutines }) => {
           )
         }
     </div>
+
+  </div>
   )
 }
 
