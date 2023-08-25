@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Route, Link } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/esm/Navbar.js";
@@ -9,9 +9,8 @@ import Routines from "./Components/Routines.jsx";
 import MyRoutines from "./Components/MyRoutines";
 import Activities from "./Components/Activities.jsx";
 import LoginLogout from "./Components/LoginLogout.jsx";
-import { fetchRoutines } from "./api/ajax-helpers.js";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Navbar } from "react-bootstrap";
+
 import {
   fetchRoutines,
   fetchActivities,
@@ -46,7 +45,7 @@ function App() {
       );
     } else {
       const routinesPromise = fetchRoutines();
-      const activitiesPromis = fetchActivities();
+      const activitiesPromise = fetchActivities();
       Promise.all([routinesPromise, activitiesPromise]).then((res) => {
         setAllRoutines(res[0]);
         setAllActivities(res[1]);
@@ -60,7 +59,10 @@ function App() {
         <Navbar sticky="top" bg="success" variant="dark" expand="lg">
           <Container>
             <LinkContainer to="/">
-              <Navbar.Brand> Welcome to Brandon's Fitness Tracker</Navbar.Brand>
+              <Navbar.Brand>
+                {" "}
+                Welcome to Fitness Tracker by Brandon
+              </Navbar.Brand>
             </LinkContainer>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse
